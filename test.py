@@ -22,17 +22,28 @@ url = "http://books.toscrape.com/catalogue/misery_332/index.html"
 r = requests.get(url)
 
 if r.ok:
-    soup = BeautifulSoup(r.text, 'lxml')
-    title = soup.title.string.strip().strip("| Books to Scrape - Sandbox")
+    soup = BeautifulSoup(r.content, 'lxml')
+    title = soup.h1.text.lower()
     url = r.url
-    upc = soup.find_all('td')[0].text
-    # upc2 = soup.find_all("article", attrs={"class": "product_page"})
+    upc = soup.select('td')[0].text
 
-    print(title)
-    print(url)
-    print(upc)
+    description = soup.select('.product_page > p')
+    description = description[0].text
+     
+    infos = soup.select('td')
+    price_enctax = infos[2].text
+    price_inctax = infos[3].text
 
-with open('misery.csv', 'w') as filecsv:
+    num_avail = infos[5].text
+    num = "".join([x for x in num_avail if x in "0123456789"])
+    category = soup.select('li > a')[2].text
+    image_url = soup.select('img')[0]
+    image_url = ("https://books.toscrape.com/" + image_url.get('src')[5:])
+    rating = soup.select('.star-rating')[0].get('class')[1]
+    print(rating)
+
+with open('misery.csv', 'w', encoding = 'utf-8-sig') as filecsv:
     scrapwriter = csv.writer(filecsv, delimiter=";")
-    scrapwriter.writerow(["Title", "Url", "UPC_Code", "Category", "Price_Inctax", "Price_Exctax", "Nb", "Description", "Rating"])
-    scrapwriter.writerow([title, url, upc])
+    scrapwriter.writerow(["Title", "UPC_Code", "Category", "Price_Inctax", "Price_Exctax", "Stock", "Description", "Rating", "Image_url", "Book_url"])
+    scrapwriter.writerow([title, upc, category, price_inctax, price_enctax, num, description, rating, image_url, url])
+
