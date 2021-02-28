@@ -1,49 +1,79 @@
+from sys import path
 import requests
 from bs4 import BeautifulSoup
-import csv
+from urllib.parse import urljoin
+import re
+import os.path
 
-"""Scraping du livre Misery
-    Écrivez un script Python qui visite cette page et en extrait les informations
-    dans un fichier CSV qui utilise les champs ci-dessus comme en-têtes de colonnes:
-    product_page_url
-    universal_ product_code (upc)
-    title
-    price_including_tax
-    price_excluding_tax
-    number_available
-    product_description
-    category
-    review_rating
-    image_url"""
 
-# Faire une requette de la page http
-url = "http://books.toscrape.com/catalogue/misery_332/index.html"
 
-r = requests.get(url)
+global urls_books, infos_books
+urls_books, infos_books = [], []
 
-if r.ok:
-    soup = BeautifulSoup(r.content, 'lxml')
-    title = soup.h1.text.lower()
-    url = r.url
-    upc = soup.select('td')[0].text
+cat_url = "https://books.toscrape.com/catalogue/the-bridge-to-consciousness-im-writing-the-bridge-between-science-and-our-old-and-new-beliefs_840/index.html"
+# cat_url = "https://books.toscrape.com/catalogue/red-hoodarsenal-vol-1-open-for-business-red-hoodarsenal-1_729/index.html"
+cat_r = requests.get(cat_url)
+cat_soup = BeautifulSoup(cat_r.content, 'lxml')
 
-    description = soup.select('.product_page > p')
-    description = description[0].text
-     
-    infos = soup.select('td')
-    price_enctax = infos[2].text
-    price_inctax = infos[3].text
+title = cat_soup.h1.text.lower()
+characters_to_remove = "#/*!@"
+pattern = "[" + characters_to_remove + "]"
+new_string = re.sub(pattern, " ", title)
+print(new_string)
+txt = ""
+for c in new_string:
+    if c != '(':
+        txt += c
+    else:
+        txt = txt[:-1]
+        break    
+print(txt)
 
-    num_avail = infos[5].text
-    num = "".join([x for x in num_avail if x in "0123456789"])
-    category = soup.select('li > a')[2].text
-    image_url = soup.select('img')[0]
-    image_url = ("https://books.toscrape.com/" + image_url.get('src')[5:])
-    rating = soup.select('.star-rating')[0].get('class')[1]
-    print(rating)
+try:
+    description = cat_soup.select('.product_page > p')[0].text
+except:
+    description = "zzz"
+    print(description)
+    
+print(description)
 
-with open('misery.csv', 'w', encoding = 'utf-8-sig') as filecsv:
-    scrapwriter = csv.writer(filecsv, delimiter=";")
-    scrapwriter.writerow(["Title", "UPC_Code", "Category", "Price_Inctax", "Price_Exctax", "Stock", "Description", "Rating", "Image_url", "Book_url"])
-    scrapwriter.writerow([title, upc, category, price_inctax, price_enctax, num, description, rating, image_url, url])
+
+def scrap_book(urls):
+
+    for link in urls:
+        # infos_book = []
+        book = requests.get(link)
+        book_soup = BeautifulSoup(book.content, 'lxml')
+
+        title = book_soup.h1.text.lower()
+        txt = ""
+        for c in title:
+            if c != '(':
+                txt += c
+            else:
+                txt = txt[:-1]
+                break    
+        # characters_to_remove = "#/!()@"
+        # pattern = "[" + characters_to_remove + "]"
+        # new_string = re.sub(pattern, "", txt)
+
+        url = book.url
+        upc = book_soup.select('td')[0].text
+
+        description = book_soup.select('.product_page > p')[0].ext
+        # description = description[0].text
+
+        infos = book_soup.select('td')
+        price_enctax = infos[2].text
+        price_inctax = infos[3].text
+
+        stock_avail = infos[5].text
+        stock = "".join([x for x in book_soup.select('td')[5].text if x in "0123456789"])
+        print(stock)
+
+
+        category = book_soup.select('li > a')[2].text
+        image_url = book_soup.select('img')[0]
+        image_url = urljoin(link, image_url.get('src'))
+        rating = book_soup.select('.star-rating')[0].get('class')[1]
 
