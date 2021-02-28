@@ -1,7 +1,6 @@
-# Utilisez les bases de Python pour l'analyse de marché
+# Script scrap.py pour le projet P2
 
-Choisissez n'importe quelle page Produit sur le site de Books to Scrape. http://books.toscrape.com/
-
+Site de Books to Scrape: http://books.toscrape.com/
 Écrivez un script Python qui visite cette page et en extrait les informations suivantes :
 
 product_page_url
@@ -16,3 +15,4 @@ review_rating
 image_url
 
 Écrivez les données dans un fichier CSV qui utilise les champs ci-dessus comme en-têtes de colonnes.
+Enregistrer le fichier image de chaque page Produit que vous consultez.
