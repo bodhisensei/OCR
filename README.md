@@ -22,13 +22,10 @@ http://books.toscrape.com/
 > Pour créer un environnement virtuel, utiliser la commande:
 python -m venv env
 
-> Pour activer l'environnement virtuel:
-source env/bin/activate
-> Pour répliquer une installation d’un environnement avec le fichier requirements, taper la commande depuis votre environnement virtuel crée:
-pip install -r requirements
+> Pour activer l'environnement virtuel: source env/bin/activate
 
->Pour quitter l'environnement virtuel:
-deactivate
+> Pour répliquer une installation d’un environnement avec le fichier requirements, taper la commande depuis votre environnement virtuel crée: pip install -r requirements
 
-> Pour lancer le script:
-> python scrap.py
+>Pour quitter l'environnement virtuel: deactivate
+
+> Pour lancer le script: > python scrap.py
