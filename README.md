@@ -20,7 +20,7 @@ http://books.toscrape.com/
 **Enregistrer le fichier image de chaque page Produit que vous consultez.**
 
 > Pour créer un environnement virtuel, utiliser la commande:
-python -m venv <environment name>
+python -m venv env
 
 > Pour activer l'environnement virtuel:
 source env/bin/activate
