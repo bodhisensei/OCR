@@ -19,6 +19,8 @@ http://books.toscrape.com/
 **Écrivez les données dans un fichier CSV qui utilise les champs ci-dessus comme en-têtes de colonnes.**
 **Enregistrer le fichier image de chaque page Produit que vous consultez.**
 
+Sous Linux:
+
 > Pour créer un environnement virtuel, utiliser la commande:
 python -m venv env
 
