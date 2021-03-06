@@ -101,7 +101,7 @@ def scrap_book(urls):
 
 # Fonction qui va créer les répertoires par catégorie et nom de livre et enregistrer l'image
 def reps_img(title, category, img_url):
-    chemin_dossier = os.path.join(os.path.dirname(__file__),category, title)
+    chemin_dossier = os.path.join(os.path.dirname(__file__),"Images", category, title)
     os.makedirs(chemin_dossier, exist_ok=True)
     url_img = requests.get(img_url)
     img_name = title+".jpg"
